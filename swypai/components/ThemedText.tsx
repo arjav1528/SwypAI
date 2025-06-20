@@ -1,60 +1,33 @@
-import { StyleSheet, Text, type TextProps } from 'react-native';
+import React from 'react';
+import { Text, TextProps, TextStyle } from 'react-native';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
-
-export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
-};
-
-export function ThemedText({
-  style,
-  lightColor,
-  darkColor,
-  type = 'default',
-  ...rest
-}: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
-
-  return (
-    <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
-      {...rest}
-    />
-  );
+interface ThemedTextProps extends TextProps {
+  type?: 'title' | 'subtitle' | 'body' | 'caption';
+  children: React.ReactNode;
 }
 
-const styles = StyleSheet.create({
-  default: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 32,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    lineHeight: 30,
-    fontSize: 16,
-    color: '#0a7ea4',
-  },
-});
+export const ThemedText: React.FC<ThemedTextProps> = ({ 
+  type = 'body', 
+  style, 
+  children, 
+  ...props 
+}) => {
+  const getTextStyle = (): TextStyle => {
+    switch (type) {
+      case 'title':
+        return { fontSize: 24, fontWeight: 'bold' as const, color: '#fff' };
+      case 'subtitle':
+        return { fontSize: 18, color: '#ccc' };
+      case 'caption':
+        return { fontSize: 12, color: '#888' };
+      default:
+        return { fontSize: 16, color: '#fff' };
+    }
+  };
+
+  return (
+    <Text style={[getTextStyle(), style]} {...props}>
+      {children}
+    </Text>
+  );
+}; 
