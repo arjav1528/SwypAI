@@ -2,6 +2,21 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Authentication Setup (Clerk)
+
+This app uses [Clerk](https://clerk.com) for authentication. To get started:
+
+1. Create a Clerk account at [clerk.com](https://clerk.com)
+2. Create a new application in your Clerk dashboard
+3. Copy your **Publishable Key** from the Clerk dashboard
+4. Create a `.env` file in the root directory with:
+
+   ```bash
+   EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
+   ```
+
+5. Replace `pk_test_your_publishable_key_here` with your actual Clerk publishable key
+
 ## Get started
 
 1. Install dependencies
@@ -25,6 +40,17 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## Authentication Flow
+
+The app includes a complete authentication flow:
+
+- **Login Screen** (`app/(auth)/login.tsx`) - Email/password and Google OAuth sign-in
+- **Signup Screen** (`app/(auth)/signup.tsx`) - User registration
+- **Home Screen** (`app/(app)/home.tsx`) - Protected authenticated area
+- **Profile Completion** (`app/(app)/complete-profile.tsx`) - User profile setup
+
+The main entry point (`app/index.tsx`) automatically redirects users based on their authentication status.
+
 ## Get a fresh project
 
 When you're ready, run:
@@ -41,6 +67,7 @@ To learn more about developing your project with Expo, look at the following res
 
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Clerk documentation](https://clerk.com/docs): Learn about Clerk authentication features.
 
 ## Join the community
 
