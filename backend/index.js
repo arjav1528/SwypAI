@@ -3,6 +3,7 @@ require('dotenv').config();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./src/mongo');
+const webhook = require('./src/webhook');
 
 const app = express();
 app.use(cors());
@@ -24,6 +25,8 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ message: 'OK' });
 });
+
+app.post('/webhook', webhook);
 
 connectDB().then(() => {
   app.listen(port, () => {

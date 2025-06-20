@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
             required: false,
             default : null
         },
-        preferGenres : {
+        genres : {
             type: Array,
             required: false,
             default: []

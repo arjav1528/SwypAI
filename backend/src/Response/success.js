@@ -8,4 +8,4 @@ class APIResponse {
 }
 
 
-module.exports = APIResponse;
+export default APIResponse;
