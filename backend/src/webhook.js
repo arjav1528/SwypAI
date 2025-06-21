@@ -60,7 +60,6 @@ const webhook = async (req, res) => {
         if(type === "user.created"){
 
             const clerkId = evt.data.id;
-            const email = evt.data.email_addresses[0].email_address;
 
             const user = await User.findOne({ clerkId });
 
@@ -77,12 +76,31 @@ const webhook = async (req, res) => {
                 email: data.email_addresses[0].email_address,
             })
 
-            return res.status(200).json(new APIResponse(
-                200,
-                "User created successfully",
-                "The user has been created successfully"
-            ));
-        }else if(type === "user.updated"){
+            const response = await fetch(`${process.env.API_URL}/user/add_user`, {
+                method: "POST",
+                body : JSON.stringify({
+                    "user_id": clerkId,
+                })
+            });
+
+            const data = await response.json();
+
+            if(response.body.status === "success"){
+                return res.status(200).json(new APIResponse(
+                    200,
+                    "User created successfully",
+                    "The user has been created successfully"
+                ));
+            }else{
+                return res.status(500).json(new APIError(
+                    500,
+                    "Internal server error",
+                    ["An error occurred while creating the user"],
+                    "An error occurred while creating the user"
+                ));
+            }
+        }
+        else if(type === "user.updated"){
             const clerkId = evt.data.id;
 
             const user = await User.findOne({ clerkId });
