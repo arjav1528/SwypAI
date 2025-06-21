@@ -89,14 +89,14 @@ const webhook = async (req, res) => {
             const email = evt.data.email_addresses[0].email_address;
             const gender = evt.data.unsafe_metadata.gender;
             const age = evt.data.unsafe_metadata.age;
-            const genres = evt.data.unsafe_metadata.preferGenres;
+            const preferGenres = evt.data.unsafe_metadata.preferpreferGenres;
             const savedQuotes = evt.data.unsafe_metadata.savedQuotes;
 
             if(user){
                 user.email = email;
                 user.gender = gender;
                 user.age = age;
-                user.genres = genres;
+                user.preferGenres = preferGenres;
                 user.savedQuotes = savedQuotes;
                 await user.save();
             }
