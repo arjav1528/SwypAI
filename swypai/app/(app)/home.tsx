@@ -11,7 +11,7 @@ const Page = () => {
   const router = useRouter();
 
   const handleProfilePress = () => {
-    router.push('/(app)/profile');
+    router.push('/profile');
   };
 
   return (

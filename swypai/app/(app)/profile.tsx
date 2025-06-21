@@ -1,12 +1,13 @@
-import { useUser } from '@clerk/clerk-expo';
+import { useClerk, useUser } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AuthGuard from '../../components/AuthGuard';
 
 const ProfilePage = () => {
   const { user } = useUser();
+  const { signOut } = useClerk();
   const router = useRouter();
 
   const profileData = user?.unsafeMetadata as any;
@@ -17,6 +18,30 @@ const ProfilePage = () => {
 
   const handleEditProfile = () => {
     router.push('/(app)/complete-profile');
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await signOut();
+            } catch (err) {
+              console.error('Error signing out:', err);
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -93,6 +118,13 @@ const ProfilePage = () => {
                 <Text style={styles.statLabel}>Status</Text>
               </View>
             </View>
+          </View>
+
+          <View style={styles.logoutSection}>
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <Ionicons name="log-out-outline" size={20} color="#ff6b6b" />
+              <Text style={styles.logoutText}>Logout</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -208,5 +240,26 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 14,
     color: '#e0e0e0',
+  },
+  logoutSection: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1a1a1a',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ff6b6b',
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ff6b6b',
+    marginLeft: 10,
   },
 }); 
