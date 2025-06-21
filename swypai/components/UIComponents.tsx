@@ -13,13 +13,7 @@ import {
     View,
     ViewStyle,
 } from 'react-native';
-import {
-    BorderRadius,
-    Colors,
-    Shadows,
-    Spacing,
-    Typography
-} from './DesignSystem';
+import { BorderRadius, Spacing, Colors, Shadows, Typography } from './DesignSystem';
 
 // Button Component
 interface ButtonProps extends TouchableOpacityProps {
