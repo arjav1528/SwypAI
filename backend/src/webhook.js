@@ -7,7 +7,8 @@ dotenv.config();
 
 
 
-  const webhook = async (req, res) => {
+
+const webhook = async (req, res) => {
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
     if(!WEBHOOK_SECRET) {
@@ -85,6 +86,20 @@ dotenv.config();
             const clerkId = evt.data.id;
 
             const user = await User.findOne({ clerkId });
+            const email = evt.data.email_addresses[0].email_address;
+            const gender = evt.data.unsafe_metadata.gender;
+            const age = evt.data.unsafe_metadata.age;
+            const genres = evt.data.unsafe_metadata.preferGenres;
+            const savedQuotes = evt.data.unsafe_metadata.savedQuotes;
+
+            if(user){
+                user.email = email;
+                user.gender = gender;
+                user.age = age;
+                user.genres = genres;
+                user.savedQuotes = savedQuotes;
+                await user.save();
+            }
 
             if(!user){
                 return res.status(200).json(new APIResponse(
@@ -94,13 +109,7 @@ dotenv.config();
                 ));
             }
 
-            user.email = evt.data.email_addresses[0].email_address;
-            user.gender = evt.data.gender;
-            user.age = evt.data.age;
-            user.genres = evt.data.genres;
-            user.savedQuotes = evt.data.savedQuotes;
-
-            await user.save();
+            
 
             return res.status(200).json(new APIResponse(
                 200,
