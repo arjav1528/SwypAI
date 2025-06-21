@@ -71,34 +71,18 @@ const webhook = async (req, res) => {
                 ));
             }
 
-            const newUser = await User.create({
+            const newUser = new User({
                 clerkId,
-                email: data.email_addresses[0].email_address,
+                email: evt.data.email_addresses[0].email_address,
             })
 
-            const response = await fetch(`${process.env.API_URL}/user/add_user`, {
-                method: "POST",
-                body : JSON.stringify({
-                    "user_id": clerkId,
-                })
-            });
+            await newUser.save();
 
-            const data = await response.json();
-
-            if(response.body.status === "success"){
-                return res.status(200).json(new APIResponse(
-                    200,
-                    "User created successfully",
-                    "The user has been created successfully"
-                ));
-            }else{
-                return res.status(500).json(new APIError(
-                    500,
-                    "Internal server error",
-                    ["An error occurred while creating the user"],
-                    "An error occurred while creating the user"
-                ));
-            }
+            return res.status(200).json(new APIResponse(
+                200,
+                "User created successfully",
+                "The user has been created successfully"
+            ));
         }
         else if(type === "user.updated"){
             const clerkId = evt.data.id;
@@ -127,13 +111,28 @@ const webhook = async (req, res) => {
                 ));
             }
 
-            
 
-            return res.status(200).json(new APIResponse(
-                200,
-                "User updated successfully",
-                "The user has been updated successfully"
-            ));
+            const response = await fetch(`${process.env.API_URL}/user/add_user`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_id: clerkId,
+                })
+            });
+
+            const data = await response.json();
+
+            console.log(data);
+
+            if(data.status === "success"){
+                return res.status(200).json(new APIResponse(
+                    200,
+                    "User updated successfully",
+                    "The user has been updated successfully"
+                ));
+            }
         }
 
         return res.status(200).json(new APIResponse(
